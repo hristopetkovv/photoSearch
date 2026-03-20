@@ -1,0 +1,17 @@
+<div class="no-results"
+     *ngIf="results.length === 0">
+    Няма намерени снимки.
+</div>
+
+<div class="grid"
+     *ngIf="results.length > 0">
+    <div class="card"
+         *ngFor="let result of results">
+        <img [src]="getImageUrl(result.url)"
+             [alt]="result.fileName" />
+        <div class="card-info">
+            <span class="filename">{{ result.fileName }}</span>
+            <span class="score">{{ result.score | number:'1.2-2' }}</span>
+        </div>
+    </div>
+</div>

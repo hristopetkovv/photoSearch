@@ -1,0 +1,33 @@
+<div class="search-container">
+
+    <h1>Търсене на снимки</h1>
+
+    <div class="status"
+         *ngIf="status">
+        <span [class.ready]="status.ready"
+              [class.not-ready]="!status.ready">
+            {{ status.ready ? '● ' + status.indexed + ' снимки индексирани' : '● Индексиране...' }}
+        </span>
+    </div>
+
+    <div class="search-box">
+        <input type="text"
+               [(ngModel)]="searchText"
+               (keydown)="onKeyDown($event)"
+               placeholder="Търси снимки... (напр. dog, beach, sunset)" />
+        <button (click)="search()"
+                [disabled]="loading || !searchText.trim()">
+            {{ loading ? 'Търси...' : 'Търси' }}
+        </button>
+    </div>
+
+    <div class="loading"
+         *ngIf="loading">
+        Обработка на заявката...
+    </div>
+
+    <app-image-grid *ngIf="searched && !loading"
+                    [results]="results">
+    </app-image-grid>
+
+</div>

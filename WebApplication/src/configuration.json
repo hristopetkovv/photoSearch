@@ -1,0 +1,8 @@
+{
+  "urls": {
+    "restUrl": "http://localhost:7777/api",
+    "clientUrl": "http://localhost:4200",
+    "mediaUrl": "http://localhost:7777"
+  },
+  "restUrlFromAppOrigin": false
+}
