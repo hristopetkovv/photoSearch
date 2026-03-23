@@ -6,9 +6,14 @@ namespace PhotoSearch
 	{
 		public static void AddServices(this IServiceCollection services)
 		{
+			services.AddHttpClient();
+
+			services.AddHostedService<ImageIndexingService>();
+
+			services.AddScoped<ITranslationService, LibreTranslateService>();
+
 			services.AddSingleton<IVectorStore, InMemoryVectorStore>();
 			services.AddSingleton<IClipService, ClipService>();
-			services.AddHostedService<ImageIndexingService>();
 		}
 
 		public static void ConfigureStaticFiles(this WebApplication app, IWebHostEnvironment env, IConfiguration configuration)

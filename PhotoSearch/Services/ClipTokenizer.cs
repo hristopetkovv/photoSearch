@@ -1,7 +1,4 @@
-﻿using System.Text.Json;
-using System.Text.RegularExpressions;
-
-namespace PhotoSearch.Services
+﻿namespace PhotoSearch.Services
 {
 	public class ClipTokenizer
 	{

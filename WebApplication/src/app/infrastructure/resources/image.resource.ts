@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { ImageResult } from "../models/image-result";
+import { ImageSearchResult } from "../models/image-search-result";
 import { Observable } from "rxjs";
 import { StatusResult } from "../models/status-result";
 
@@ -13,8 +13,8 @@ export class ImageResource {
         private http: HttpClient
     ) { }
 
-    search(text: string, limit: number = 20): Observable<ImageResult[]> {
-        return this.http.get<ImageResult[]>(`${this.url}/search?text=${encodeURIComponent(text)}&limit=${limit}&t=${Date.now()}`);
+    search(text: string, limit: number = 20): Observable<ImageSearchResult[]> {
+        return this.http.get<ImageSearchResult[]>(`${this.url}/search?text=${encodeURIComponent(text)}&limit=${limit}&t=${Date.now()}`);
       }
     
       getStatus(): Observable<StatusResult> {

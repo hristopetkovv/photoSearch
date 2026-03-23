@@ -13,10 +13,15 @@
 			return entries.AsReadOnly();
 		}
 
-		public List<(ImageEntry Entry, float Score)> Search(float[] textEmbedding, int limit = 20)
+		public List<ImageSearchResult> Search(float[] textEmbedding, int limit = 20)
 		{
 			return entries
-					.Select(e => (Entry: e, Score: CosineSimilarity(e.Embedding, textEmbedding)))
+					.Select(e => new ImageSearchResult
+					{
+						Url = $"/images/{Uri.EscapeDataString(e.ImageName)}",
+						Name = e.ImageName,
+						Score = (float)Math.Round(CosineSimilarity(e.Embedding, textEmbedding), 4)
+					})
 					.OrderByDescending(x => x.Score)
 					.Take(limit)
 					.ToList();

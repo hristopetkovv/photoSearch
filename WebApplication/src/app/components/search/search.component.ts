@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ImageGridComponent } from '../image-grid/image-grid.component';
 import { ImageResource } from '../../infrastructure/resources/image.resource';
-import { ImageResult } from '../../infrastructure/models/image-result';
+import { ImageSearchResult } from '../../infrastructure/models/image-search-result';
 import { StatusResult } from '../../infrastructure/models/status-result';
 
 @Component({
@@ -15,7 +15,7 @@ import { StatusResult } from '../../infrastructure/models/status-result';
 })
 export class SearchComponent implements OnInit, OnDestroy {
   searchText  = '';
-  results:    ImageResult[] = [];
+  results:    ImageSearchResult[] = [];
   status:     StatusResult | null = null;
   loading     = false;
   searched    = false;
@@ -30,18 +30,6 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopPolling();
-  }
-
-  private checkStatus(): void {
-    this.resource.getStatus().subscribe(status => {
-      this.status = status;
-
-      if (!status.ready) {
-        this.statusInterval = setTimeout(() => this.checkStatus(), 3000);
-      } else {
-        this.stopPolling();
-      }
-    });
   }
 
   search(): void {
@@ -59,6 +47,18 @@ export class SearchComponent implements OnInit, OnDestroy {
       error: () => {
         this.loading  = false;
         this.searched = true;
+      }
+    });
+  }
+
+  private checkStatus(): void {
+    this.resource.getStatus().subscribe(status => {
+      this.status = status;
+
+      if (!status.ready) {
+        this.statusInterval = setTimeout(() => this.checkStatus(), 3000);
+      } else {
+        this.stopPolling();
       }
     });
   }

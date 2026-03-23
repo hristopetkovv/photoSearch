@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using PhotoSearch.Interfaces;
 
 namespace PhotoSearch.Controllers
 {
@@ -8,28 +8,30 @@ namespace PhotoSearch.Controllers
 	{
 		private readonly IClipService clipService;
 		private readonly IVectorStore vectorStore;
+		private readonly ITranslationService translationService;
 
-		public ImageController(IClipService clipService, IVectorStore vectorStore)
+		public ImageController(
+			IClipService clipService, 
+			IVectorStore vectorStore,
+			ITranslationService translationService
+			)
 		{
 			this.clipService = clipService;
 			this.vectorStore = vectorStore;
+			this.translationService = translationService;
 		}
 
 		[HttpGet("search")]
-		public IActionResult Search([FromQuery] string text, [FromQuery] int limit = 20)
+		public async Task<IActionResult> Search([FromQuery] string text, [FromQuery] int limit = 20)
 		{
 			if (string.IsNullOrWhiteSpace(text))
 				return BadRequest("Липсва заявка.");
 
-			var queryEmbedding = clipService.GetTextEmbedding(text);
-			var results = vectorStore.Search(queryEmbedding, limit);
+			var translatedText = await translationService.TranslateToEnglishAsync(text);
 
-			return Ok(results.Select(r => new
-			{
-				url = $"/images/{Uri.EscapeDataString(r.Entry.ImageName)}",
-				fileName = r.Entry.ImageName,
-				score = Math.Round(r.Score, 4)
-			}));
+			var textEmbedding = clipService.GetTextEmbedding(translatedText);
+
+			return Ok(vectorStore.Search(textEmbedding, limit));
 		}
 
 		[HttpGet("status")]
