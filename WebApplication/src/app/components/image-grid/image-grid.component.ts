@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageSearchResult } from '../../infrastructure/models/image-search-result';
 import { Configuration } from '../../infrastructure/configuration/configuration';
@@ -11,7 +11,7 @@ import { Configuration } from '../../infrastructure/configuration/configuration'
     styleUrl: './image-grid.component.css'
 })
 export class ImageGridComponent {
-  @Input() results: ImageSearchResult[] = [];
+  results = input<ImageSearchResult[]>([]);
 
   constructor(private configuration: Configuration)
   { }

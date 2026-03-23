@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ImageGridComponent } from '../image-grid/image-grid.component';
@@ -14,11 +14,11 @@ import { StatusResult } from '../../infrastructure/models/status-result';
     styleUrl: './search.component.css'
 })
 export class SearchComponent implements OnInit, OnDestroy {
-  searchText  = '';
-  results:    ImageSearchResult[] = [];
-  status:     StatusResult | null = null;
-  loading     = false;
-  searched    = false;
+  searchText = signal('');
+  results = signal<ImageSearchResult[]>([]);
+  status     = signal<StatusResult | null>(null);
+  loading    = signal(false);
+  searched   = signal(false);
 
   private statusInterval: any;
 
@@ -33,27 +33,27 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   search(): void {
-    if (!this.searchText.trim()) return;
+    if (!this.searchText().trim()) return;
 
-    this.loading  = true;
-    this.searched = false;
+    this.loading.set(true);
+    this.searched.set(false);
 
-    this.resource.search(this.searchText).subscribe({
+    this.resource.search(this.searchText()).subscribe({
       next: results => {
-        this.results  = results;
-        this.loading  = false;
-        this.searched = true;
+        this.results.set(results);
+        this.loading.set(false);
+        this.searched.set(true);
       },
       error: () => {
-        this.loading  = false;
-        this.searched = true;
+        this.loading.set(false);
+        this.searched.set(true);
       }
     });
   }
 
   private checkStatus(): void {
     this.resource.getStatus().subscribe(status => {
-      this.status = status;
+      this.status.set(status);
 
       if (!status.ready) {
         this.statusInterval = setTimeout(() => this.checkStatus(), 3000);

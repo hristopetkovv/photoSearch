@@ -2,32 +2,41 @@
 
     <h1>Търсене на снимки</h1>
 
-    <div class="status"
-         *ngIf="status">
-        <span [class.ready]="status.ready"
-              [class.not-ready]="!status.ready">
-            {{ status.ready ? '● ' + status.indexed + ' снимки индексирани' : '● Индексиране...' }}
+    <!-- status -->
+    @if (status()) {
+    <div class="status">
+        <span [class.ready]="status()?.ready"
+              [class.not-ready]="!status()?.ready">
+            {{ status()?.ready ? '● ' + status()?.indexed + ' снимки индексирани' : '● Индексиране...' }}
         </span>
     </div>
+    }
 
     <div class="search-box">
+
+        <!-- searchText -->
         <input type="text"
-               [(ngModel)]="searchText"
+               [ngModel]="searchText()"
+               (ngModelChange)="searchText.set($event)"
                (keydown)="onKeyDown($event)"
-               placeholder="Търси снимки... (напр. dog, beach, sunset)" />
+               placeholder="Търси снимки... (напр. куче, плаж, залез)" />
         <button (click)="search()"
-                [disabled]="loading || !searchText.trim()">
-            {{ loading ? 'Търси...' : 'Търси' }}
+                [disabled]="loading() || !searchText().trim()">
+            {{ loading() ? 'Търси...' : 'Търси' }}
         </button>
     </div>
 
-    <div class="loading"
-         *ngIf="loading">
+    <!-- loading -->
+    @if (loading()) {
+    <div class="loading">
         Обработка на заявката...
     </div>
+    }
 
-    <app-image-grid *ngIf="searched && !loading"
-                    [results]="results">
+    <!-- searched и results -->
+    @if (searched() && !loading()) {
+    <app-image-grid [results]="results()">
     </app-image-grid>
+    }
 
 </div>

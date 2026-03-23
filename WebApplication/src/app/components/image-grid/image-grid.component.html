@@ -1,17 +1,19 @@
-<div class="no-results"
-     *ngIf="results.length === 0">
+@if (results().length === 0) {
+<div class="no-results">
     Няма намерени снимки.
 </div>
-
-<div class="grid"
-     *ngIf="results.length > 0">
-    <div class="card"
-         *ngFor="let result of results">
+}
+@else {
+<div class="grid">
+    @for (result of results(); track result.url) {
+    <div class="card">
         <img [src]="getImageUrl(result.url)"
              [alt]="result.name" />
         <div class="card-info">
-            <span class="imagename">{{ result.name }}</span>
+            <span class="image-name">{{ result.name }}</span>
             <span class="score">{{ result.score | number:'1.2-2' }}</span>
         </div>
     </div>
+    }
 </div>
+}
