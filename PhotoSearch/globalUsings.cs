@@ -1,11 +1,19 @@
 ﻿global using PhotoSearch;
-global using PhotoSearch.Interfaces;
-global using PhotoSearch.Services;
-global using PhotoSearch.Models;
 global using System.Text.Json;
 global using System.Text.RegularExpressions;
 global using System.Text;
 global using Microsoft.AspNetCore.Mvc;
-
-
-
+global using Microsoft.ML.OnnxRuntime;
+global using Microsoft.ML.OnnxRuntime.Tensors;
+global using SixLabors.ImageSharp;
+global using SixLabors.ImageSharp.PixelFormats;
+global using SixLabors.ImageSharp.Processing;
+global using Microsoft.Extensions.FileProviders;
+global using PhotoSearch.Services.AI;
+global using PhotoSearch.Services.Images;
+global using PhotoSearch.Services.Translations;
+global using PhotoSearch.Models.Image;
+global using PhotoSearch.Services.Helpers;
+global using PhotoSearch.Interfaces.AI;
+global using PhotoSearch.Interfaces.Images;
+global using PhotoSearch.Interfaces.Translations;

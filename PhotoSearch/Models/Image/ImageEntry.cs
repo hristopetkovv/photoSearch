@@ -1,4 +1,4 @@
-﻿namespace PhotoSearch.Models
+﻿namespace PhotoSearch.Models.Image
 {
 	public class ImageEntry
 	{

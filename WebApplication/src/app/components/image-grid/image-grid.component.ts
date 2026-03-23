@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImageSearchResult } from '../../infrastructure/models/image-search-result';
+import { ImageSearchResult } from '../../infrastructure/models/images/image-search-result';
 import { Configuration } from '../../infrastructure/configuration/configuration';
 
 @Component({

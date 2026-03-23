@@ -1,6 +1,4 @@
-﻿using PhotoSearch.Interfaces;
-
-namespace PhotoSearch.Controllers
+﻿namespace PhotoSearch.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
@@ -9,16 +7,19 @@ namespace PhotoSearch.Controllers
 		private readonly IClipService clipService;
 		private readonly IVectorStore vectorStore;
 		private readonly ITranslationService translationService;
+		private readonly IImageService imageService;
 
 		public ImageController(
-			IClipService clipService, 
+			IClipService clipService,
 			IVectorStore vectorStore,
-			ITranslationService translationService
+			ITranslationService translationService,
+			IImageService imageService
 			)
 		{
 			this.clipService = clipService;
 			this.vectorStore = vectorStore;
 			this.translationService = translationService;
+			this.imageService = imageService;
 		}
 
 		[HttpGet("search")]
@@ -36,13 +37,16 @@ namespace PhotoSearch.Controllers
 
 		[HttpGet("status")]
 		public IActionResult Status()
+			=> Ok(vectorStore.IndexingStatus());
+
+		[HttpPost("upload")]
+		public async Task<IActionResult> Upload(IFormFile image)
 		{
-			var count = vectorStore.GetAll().Count;
-			return Ok(new
-			{
-				indexed = count,
-				ready = count > 0
-			});
+			var result = await imageService.UploadImageAsync(image);
+
+			return result.Success
+				? Ok(result)
+				: BadRequest(result.Message);
 		}
 	}
 }

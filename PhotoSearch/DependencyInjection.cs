@@ -1,16 +1,13 @@
-﻿using Microsoft.Extensions.FileProviders;
-
-namespace PhotoSearch
+﻿namespace PhotoSearch
 {
 	public static class DependencyInjection
 	{
 		public static void AddServices(this IServiceCollection services)
 		{
-			services.AddHttpClient();
-
 			services.AddHostedService<ImageIndexingService>();
 
 			services.AddScoped<ITranslationService, LibreTranslateService>();
+			services.AddScoped<IImageService, ImageService>();
 
 			services.AddSingleton<IVectorStore, InMemoryVectorStore>();
 			services.AddSingleton<IClipService, ClipService>();

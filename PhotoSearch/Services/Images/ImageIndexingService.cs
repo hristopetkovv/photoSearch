@@ -1,4 +1,4 @@
-﻿namespace PhotoSearch.Services
+﻿namespace PhotoSearch.Services.Images
 {
 	public class ImageIndexingService : IHostedService
 	{

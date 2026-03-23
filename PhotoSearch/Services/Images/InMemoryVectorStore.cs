@@ -1,16 +1,20 @@
-﻿namespace PhotoSearch.Services
+﻿namespace PhotoSearch.Services.Images
 {
 	public class InMemoryVectorStore : IVectorStore
 	{
 		private readonly List<ImageEntry> entries = [];
-		public void Add(ImageEntry entry)
-		{
-			entries.Add(entry);
-		}
 
-		public IReadOnlyList<ImageEntry> GetAll()
+		public void Add(ImageEntry entry) => entries.Add(entry);
+
+		public IndexingStatusResult IndexingStatus()
 		{
-			return entries.AsReadOnly();
+			var imagesCount = entries.AsReadOnly().Count;
+
+			return new IndexingStatusResult
+			{
+				Indexed = imagesCount,
+				Ready = imagesCount > 0
+			};
 		}
 
 		public List<ImageSearchResult> Search(float[] textEmbedding, int limit = 20)
@@ -20,20 +24,11 @@
 					{
 						Url = $"/images/{Uri.EscapeDataString(e.ImageName)}",
 						Name = e.ImageName,
-						Score = (float)Math.Round(CosineSimilarity(e.Embedding, textEmbedding), 4)
+						Score = (float)Math.Round(MathHelper.CosineSimilarity(e.Embedding, textEmbedding), 4)
 					})
 					.OrderByDescending(x => x.Score)
 					.Take(limit)
 					.ToList();
-		}
-
-		private static float CosineSimilarity(float[] a, float[] b)
-		{
-			float dot = 0f;
-			for (int i = 0; i < a.Length; i++)
-				dot += a[i] * b[i];
-
-			return dot;
 		}
 	}
 }

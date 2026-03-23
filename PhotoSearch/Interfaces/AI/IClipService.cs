@@ -1,4 +1,4 @@
-﻿namespace PhotoSearch.Interfaces
+﻿namespace PhotoSearch.Interfaces.AI
 {
 	public interface IClipService
 	{

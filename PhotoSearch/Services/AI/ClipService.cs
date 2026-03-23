@@ -1,10 +1,4 @@
-﻿using Microsoft.ML.OnnxRuntime;
-using Microsoft.ML.OnnxRuntime.Tensors;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-
-namespace PhotoSearch.Services
+﻿namespace PhotoSearch.Services.AI
 {
 	public class ClipService : IClipService, IDisposable
 	{
@@ -72,6 +66,7 @@ namespace PhotoSearch.Services
 			var raw = results.First(r => r.Name == "image_embeds")
 							 .AsEnumerable<float>()
 							 .ToArray();
+
 			return L2Normalize(raw);
 		}
 
@@ -92,6 +87,7 @@ namespace PhotoSearch.Services
 			var raw = results.First(r => r.Name == "text_embeds")
 							 .AsEnumerable<float>()
 							 .ToArray();
+
 			return L2Normalize(raw);
 		}
 

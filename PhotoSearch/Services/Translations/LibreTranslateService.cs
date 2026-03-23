@@ -1,4 +1,4 @@
-﻿namespace PhotoSearch.Services
+﻿namespace PhotoSearch.Services.Translations
 {
 	public class LibreTranslateService : ITranslationService
 	{
@@ -8,7 +8,7 @@
 		public LibreTranslateService(HttpClient httpClient, IConfiguration configuration)
 		{
 			this.httpClient = httpClient;
-			this.libreTranslateUrl = configuration["LibreTranslate:Url"]!;
+			libreTranslateUrl = configuration["LibreTranslate:Url"]!;
 		}
 
 		public async Task<string> TranslateToEnglishAsync(string text)

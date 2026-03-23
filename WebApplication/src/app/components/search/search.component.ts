@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ImageGridComponent } from '../image-grid/image-grid.component';
 import { ImageResource } from '../../infrastructure/resources/image.resource';
-import { ImageSearchResult } from '../../infrastructure/models/image-search-result';
-import { StatusResult } from '../../infrastructure/models/status-result';
+import { ImageSearchResult } from '../../infrastructure/models/images/image-search-result';
+import { IndexingStatusResult } from '../../infrastructure/models/images/indexing-status-result';
 
 @Component({
     selector: 'app-search',
@@ -16,7 +16,7 @@ import { StatusResult } from '../../infrastructure/models/status-result';
 export class SearchComponent implements OnInit, OnDestroy {
   searchText = signal('');
   results = signal<ImageSearchResult[]>([]);
-  status     = signal<StatusResult | null>(null);
+  status     = signal<IndexingStatusResult | null>(null);
   loading    = signal(false);
   searched   = signal(false);
 
