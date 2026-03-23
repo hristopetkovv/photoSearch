@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PhotoSearch.Interfaces;
 
 namespace PhotoSearch.Controllers
 {

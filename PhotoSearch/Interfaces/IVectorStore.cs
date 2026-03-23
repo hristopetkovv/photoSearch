@@ -1,6 +1,4 @@
-﻿using PhotoSearch.Models;
-
-namespace PhotoSearch.Interfaces
+﻿namespace PhotoSearch.Interfaces
 {
 	public interface IVectorStore
 	{

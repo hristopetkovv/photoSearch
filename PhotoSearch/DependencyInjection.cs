@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.FileProviders;
-using PhotoSearch.Interfaces;
-using PhotoSearch.Services;
 
 namespace PhotoSearch
 {

@@ -1,7 +1,4 @@
-﻿using PhotoSearch.Interfaces;
-using PhotoSearch.Models;
-
-namespace PhotoSearch.Services
+﻿namespace PhotoSearch.Services
 {
 	public class InMemoryVectorStore : IVectorStore
 	{
