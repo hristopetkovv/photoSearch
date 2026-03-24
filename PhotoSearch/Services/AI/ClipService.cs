@@ -13,9 +13,11 @@
 		{
 			var modelsPath = Path.Combine(env.ContentRootPath, "Models", "clip");
 
-			var options = new Microsoft.ML.OnnxRuntime.SessionOptions();
-			options.EnableMemoryPattern = true;
-			options.ExecutionMode = ExecutionMode.ORT_SEQUENTIAL;
+			var options = new Microsoft.ML.OnnxRuntime.SessionOptions
+			{
+				EnableMemoryPattern = true,
+				ExecutionMode = ExecutionMode.ORT_SEQUENTIAL
+			};
 
 			_imageSession = new InferenceSession(
 				Path.Combine(modelsPath, "vision_model.onnx"), options);
@@ -30,42 +32,9 @@
 
 		public float[] GetImageEmbedding(string imagePath)
 		{
-			using var image = Image.Load<Rgb24>(imagePath);
-
-			// Стъпка 1: Resize до 224 като запазим aspect ratio
-			// (най-малката страна да стане 224)
-			var (w, h) = (image.Width, image.Height);
-			var scale = 224f / Math.Min(w, h);
-			var newW = (int)Math.Round(w * scale);
-			var newH = (int)Math.Round(h * scale);
-			image.Mutate(x => x.Resize(newW, newH));
-
-			// Стъпка 2: Center crop 224x224
-			var cropX = (newW - 224) / 2;
-			var cropY = (newH - 224) / 2;
-			image.Mutate(x => x.Crop(new Rectangle(cropX, cropY, 224, 224)));
-
-			// Стъпка 3: Попълни тензора с нормализирани стойности
-			var tensor = new DenseTensor<float>([1, 3, 224, 224]);
-
-			for (int y = 0; y < 224; y++)
-				for (int x = 0; x < 224; x++)
-				{
-					var px = image[x, y];
-					tensor[0, 0, y, x] = (px.R / 255f - Mean[0]) / Std[0];
-					tensor[0, 1, y, x] = (px.G / 255f - Mean[1]) / Std[1];
-					tensor[0, 2, y, x] = (px.B / 255f - Mean[2]) / Std[2];
-				}
-
-			var inputs = new[]
-			{
-				NamedOnnxValue.CreateFromTensor("pixel_values", tensor)
-			};
-
-			using var results = _imageSession.Run(inputs);
-			var raw = results.First(r => r.Name == "image_embeds")
-							 .AsEnumerable<float>()
-							 .ToArray();
+			using var image = LoadAndPreprocessImage(imagePath);
+			var tensor = BuildTensor(image);
+			var raw = RunImageModel(tensor);
 
 			return L2Normalize(raw);
 		}
@@ -89,6 +58,54 @@
 							 .ToArray();
 
 			return L2Normalize(raw);
+		}
+
+		private static Image<Rgb24> LoadAndPreprocessImage(string imagePath)
+		{
+			var image = Image.Load<Rgb24>(imagePath);
+			ResizeKeepingAspectRatio(image);
+			CenterCrop(image);
+			return image;
+		}
+
+		private static void ResizeKeepingAspectRatio(Image<Rgb24> image)
+		{
+			var scale = 224f / Math.Min(image.Width, image.Height);
+			var newW = (int)Math.Round(image.Width * scale);
+			var newH = (int)Math.Round(image.Height * scale);
+			image.Mutate(x => x.Resize(newW, newH));
+		}
+
+		private static void CenterCrop(Image<Rgb24> image)
+		{
+			var cropX = (image.Width - 224) / 2;
+			var cropY = (image.Height - 224) / 2;
+			image.Mutate(x => x.Crop(new Rectangle(cropX, cropY, 224, 224)));
+		}
+
+		private static DenseTensor<float> BuildTensor(Image<Rgb24> image)
+		{
+			var tensor = new DenseTensor<float>([1, 3, 224, 224]);
+
+			for (int y = 0; y < 224; y++)
+				for (int x = 0; x < 224; x++)
+				{
+					var px = image[x, y];
+					tensor[0, 0, y, x] = (px.R / 255f - Mean[0]) / Std[0];
+					tensor[0, 1, y, x] = (px.G / 255f - Mean[1]) / Std[1];
+					tensor[0, 2, y, x] = (px.B / 255f - Mean[2]) / Std[2];
+				}
+
+			return tensor;
+		}
+
+		private float[] RunImageModel(DenseTensor<float> tensor)
+		{
+			var inputs = new[] { NamedOnnxValue.CreateFromTensor("pixel_values", tensor) };
+			using var results = _imageSession.Run(inputs);
+			return results.First(r => r.Name == "image_embeds")
+						  .AsEnumerable<float>()
+						  .ToArray();
 		}
 
 		private static float[] L2Normalize(float[] v)

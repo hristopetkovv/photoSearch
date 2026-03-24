@@ -47,7 +47,7 @@
 			return tokens.Take(MaxLength).ToArray();
 		}
 
-		private IEnumerable<string> BPEEncode(string word)
+		private List<string> BPEEncode(string word)
 		{
 			// Разбий думата на символи и добави </w> към последния
 			var symbols = word.Select((c, i) =>
