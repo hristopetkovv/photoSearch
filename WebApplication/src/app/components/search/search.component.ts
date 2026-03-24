@@ -3,13 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ImageGridComponent } from '../image-grid/image-grid.component';
 import { ImageResource } from '../../infrastructure/resources/image.resource';
-import { ImageSearchResult } from '../../infrastructure/models/images/image-search-result';
-import { IndexingStatusResult } from '../../infrastructure/models/images/indexing-status-result';
+import { ImageSearchResult } from '../../models/images/image-search-result';
+import { IndexingStatusResult } from '../../models/images/indexing-status-result';
+import { UploadImageComponent } from '../upload-image/upload-image.component';
 
 @Component({
     selector: 'app-search',
     standalone: true,
-    imports: [CommonModule, FormsModule, ImageGridComponent],
+    imports: [CommonModule, FormsModule, ImageGridComponent, UploadImageComponent],
     templateUrl: './search.component.html',
     styleUrl: './search.component.css'
 })
@@ -51,7 +52,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     });
   }
 
-  private checkStatus(): void {
+  checkStatus(): void {
     this.resource.getStatus().subscribe(status => {
       this.status.set(status);
 

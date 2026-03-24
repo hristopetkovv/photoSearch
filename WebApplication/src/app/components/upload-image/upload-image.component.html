@@ -1,0 +1,11 @@
+<div class="upload-container">
+    <label class="upload-btn"
+           [class.disabled]="uploading()">
+        {{ uploading() ? 'Качва се...' : 'Добави снимка' }}
+        <input type="file"
+               accept=".jpg,.jpeg,.png,.webp,.bmp"
+               (change)="onFileSelected($event)"
+               [disabled]="uploading()"
+               hidden />
+    </label>
+</div>

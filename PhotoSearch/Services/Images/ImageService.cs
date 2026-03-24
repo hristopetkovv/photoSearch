@@ -31,7 +31,7 @@
 				return new ImageUploadResult { Success = false, Message = "Неподдържан формат." };
 
 			var imageName = ImageHelper.GenerateImageName(image.FileName, imageExtension);
-			var imagePath = ImageHelper.BuildImagePath(imageName, env.ContentRootPath, configuration["ImageSearch:ImagesFolder"]!);
+			var imagePath = ImageHelper.BuildImagePath(imageName, env.ContentRootPath, configuration["ImageSearch:FolderPath"]!);
 
 			try
 			{

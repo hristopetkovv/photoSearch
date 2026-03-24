@@ -24,6 +24,9 @@
                 [disabled]="loading() || !searchText().trim()">
             {{ loading() ? 'Търси...' : 'Търси' }}
         </button>
+
+        <app-upload-image (uploaded)="checkStatus()" />
+
     </div>
 
     <!-- loading -->
