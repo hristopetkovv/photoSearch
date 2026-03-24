@@ -1,4 +1,4 @@
-import { Component, output, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { ImageResource } from '../../infrastructure/resources/image.resource';
 import { ImageUploadResult } from '../../models/images/image-upload-result';
 import { ToastrService } from 'ngx-toastr';
@@ -12,12 +12,10 @@ import { ToastrService } from 'ngx-toastr';
 export class UploadImageComponent {
     uploading = signal(false);
 
-    uploaded = output<void>();
+    private resource = inject(ImageResource);
+    private toastr = inject(ToastrService);
 
-    constructor(
-        private resource: ImageResource,
-        private toastr: ToastrService
-    ) {}
+    uploaded = output<void>();
 
     onFileSelected(event: Event): void {
         const input = event.target as HTMLInputElement;

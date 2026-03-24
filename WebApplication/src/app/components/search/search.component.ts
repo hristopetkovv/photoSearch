@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ImageGridComponent } from '../image-grid/image-grid.component';
@@ -21,9 +21,9 @@ export class SearchComponent implements OnInit, OnDestroy {
   loading    = signal(false);
   searched   = signal(false);
 
+  private resource = inject(ImageResource);
+  
   private statusInterval: any;
-
-  constructor(private resource: ImageResource) {}
 
   ngOnInit(): void {
      this.checkStatus();
