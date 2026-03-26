@@ -17,3 +17,7 @@ global using PhotoSearch.Services.Helpers;
 global using PhotoSearch.Interfaces.AI;
 global using PhotoSearch.Interfaces.Images;
 global using PhotoSearch.Interfaces.Translations;
+global using Pgvector;
+global using Microsoft.EntityFrameworkCore;
+global using PhotoSearch.Data;
+

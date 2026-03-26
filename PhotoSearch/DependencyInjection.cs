@@ -2,15 +2,29 @@
 {
 	public static class DependencyInjection
 	{
-		public static void AddServices(this IServiceCollection services)
+		public static void AddServices(this IServiceCollection services, IConfiguration configuration)
 		{
 			services.AddHostedService<ImageIndexingService>();
 
 			services.AddScoped<ITranslationService, LibreTranslateService>();
 			services.AddScoped<IImageService, ImageService>();
 
-			services.AddSingleton<IVectorStore, InMemoryVectorStore>();
 			services.AddSingleton<IClipService, ClipService>();
+
+			if (configuration.GetValue<bool>("ImageSearch:UsePostgres"))
+				services.AddScoped<IVectorStore, PgVectorStore>();
+			else
+				services.AddSingleton<IVectorStore, InMemoryVectorStore>();
+		}
+
+		public static void AddDbContext(this IServiceCollection services, IConfiguration configuration)
+		{
+			services.AddDbContext<AppDbContext>(options =>
+			{
+				options
+					.UseNpgsql(configuration.GetConnectionString("DefaultConnection"), o => o.UseVector())
+					.UseSnakeCaseNamingConvention();
+			});
 		}
 
 		public static void ConfigureStaticFiles(this WebApplication app, IWebHostEnvironment env, IConfiguration configuration)
