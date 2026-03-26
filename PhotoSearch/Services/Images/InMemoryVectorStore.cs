@@ -6,6 +6,10 @@
 
 		public void Add(ImageEntry entry) => entries.Add(entry);
 
+		public void AddRange(List<ImageEntry> entries) => this.entries.AddRange(entries);
+
+		public HashSet<string> GetAllImagePaths() => entries.Select(e => e.ImagePath).ToHashSet();
+
 		public IndexingStatusResult IndexingStatus()
 		{
 			var imagesCount = entries.AsReadOnly().Count;
@@ -24,7 +28,7 @@
 					{
 						Url = $"/images/{Uri.EscapeDataString(e.ImageName)}",
 						Name = e.ImageName,
-						Score = (float)Math.Round(MathHelper.CosineSimilarity(e.Embedding, textEmbedding), 4)
+						Score = (float)Math.Round(MathHelper.CosineSimilarity(e.Embedding.Memory.ToArray(), textEmbedding), 4)
 					})
 					.OrderByDescending(x => x.Score)
 					.Take(limit)

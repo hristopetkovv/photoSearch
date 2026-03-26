@@ -62,7 +62,7 @@
 			{
 				ImageName = imageName,
 				ImagePath = imagePath,
-				Embedding = embedding
+				Embedding = new Vector(embedding)
 			});
 		}
 	}
