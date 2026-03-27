@@ -8,6 +8,8 @@
 
 		public void AddRange(List<ImageEntry> entries) => this.entries.AddRange(entries);
 
+		public IReadOnlyList<ImageEntry> GetAll() => entries.AsReadOnly();
+
 		public HashSet<string> GetAllImagePaths() => entries.Select(e => e.ImagePath).ToHashSet();
 
 		public IndexingStatusResult IndexingStatus()

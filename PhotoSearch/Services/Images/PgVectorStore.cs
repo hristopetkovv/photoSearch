@@ -16,6 +16,8 @@ namespace PhotoSearch.Services.Images
 			context.SaveChanges();
 		}
 
+		public IReadOnlyList<ImageEntry> GetAll() => context.ImageEntries.ToList().AsReadOnly();
+
 		public HashSet<string> GetAllImagePaths() => context.ImageEntries.Select(e => e.ImagePath).ToHashSet();
 
 		public IndexingStatusResult IndexingStatus()
