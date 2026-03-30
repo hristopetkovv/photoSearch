@@ -1,11 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.FileProviders;
-using PhotoSearch.Interfaces.AI;
-using PhotoSearch.Interfaces.Images;
-
-namespace PhotoSearch.Tests
+﻿namespace PhotoSearch.Tests
 {
 	public class ImageServiceTests : IDisposable
 	{
